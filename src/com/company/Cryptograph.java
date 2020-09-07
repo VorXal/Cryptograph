@@ -73,4 +73,69 @@ public class Cryptograph {
 
         return arrayChars;
     }
+
+    public int[] getCoordsOfChar(char ch){
+        int[] output = new int[2];
+        char[][] matrix = this.getMatrix();
+
+        for(int i = 0; i < 5; i++){
+            for (int j = 0; j < 5; j++){
+                if(matrix[i][j] == ch){
+                    output[0] = i;
+                    output[1] = j;
+                }
+            }
+        }
+        return output;
+    }
+
+    public String encryptBigram(String input){
+        int[] firstCoord = this.getCoordsOfChar(input.charAt(0));
+        int[] secondCoord = this.getCoordsOfChar(input.charAt(1));
+
+        if (firstCoord[0] == secondCoord[0] && firstCoord[1] == secondCoord[1]){
+            if(input.charAt(0) == 'X' && input.charAt(1) == 'X'){
+                if(firstCoord[1] == 4){
+                    return String.valueOf(matrix[firstCoord[0]][0]) + matrix[firstCoord[0]][0];
+                }
+                else{
+                    return (String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[firstCoord[0]][firstCoord[1] + 1]) +
+                            (String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[firstCoord[0]][firstCoord[1] + 1]);
+                }
+            }
+            return (encryptBigram(input.charAt(0) + "X") + encryptBigram(input.charAt(0) + "X"));
+        }else if (firstCoord[0] == secondCoord[0]){ //SAME ROW
+            if(firstCoord[1] < secondCoord[1]){
+                if(secondCoord[1] == 4){
+                    return String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[secondCoord[0]][0];
+                } else {
+                    return String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[secondCoord[0]][secondCoord[1] + 1];
+                }
+            } else{
+                if(firstCoord[1] == 4){
+                    return String.valueOf(matrix[firstCoord[0]][0]) + matrix[secondCoord[0]][secondCoord[1] + 1];
+                }
+                else {
+                    return String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[secondCoord[0]][secondCoord[1] + 1];
+                }
+            }
+        } else if(firstCoord[1] == secondCoord[1]){
+            if(firstCoord[0] < secondCoord[0]){
+                if(secondCoord[0] == 4){
+                    return String.valueOf(matrix[firstCoord[0] + 1][firstCoord[1]]) + matrix[0][secondCoord[1]];
+                } else {
+                    return String.valueOf(matrix[firstCoord[0] + 1][firstCoord[1]]) + matrix[secondCoord[0] + 1][secondCoord[1]];
+                }
+            } else{
+                if(firstCoord[0] == 4){
+                    return String.valueOf(matrix[0][firstCoord[1]]) + matrix[secondCoord[0] + 1][secondCoord[1]];
+                }
+                else {
+                    return String.valueOf(matrix[firstCoord[0] + 1][firstCoord[1]]) + matrix[secondCoord[0] + 1][secondCoord[1]];
+                }
+            }
+        } else {
+            return String.valueOf(matrix[firstCoord[0]][secondCoord[1]]) + matrix[secondCoord[0]][firstCoord[1]];
+        }
+    }
 }

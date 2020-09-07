@@ -3,7 +3,7 @@ package com.company;
 public class Main {
 
     public static void main(String[] args) {
-        Cryptograph cr = new Cryptograph("Hello","helicopo");
+        Cryptograph cr = new Cryptograph("Hello","x");
         String[] chars = cr.toBigram();
         char[][] key = cr.getMatrix();
         for (String i : chars) {
@@ -16,5 +16,13 @@ public class Main {
                 System.out.print(c + "\t");
             }
         }
+
+        System.out.println();
+        int[] aCoords = cr.getCoordsOfChar('Y');
+        System.out.println(aCoords[0]);
+        System.out.println(aCoords[1]);
+
+        System.out.println(cr.encryptBigram("FF"));
+
     }
 }
