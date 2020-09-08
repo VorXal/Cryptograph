@@ -23,11 +23,11 @@ public class Cryptograph {
         this.key = sb.toString().toUpperCase();
     }
 
-    String alphabet = "abcdefghiklmnopqrstuvwxyz".toUpperCase();
+    private String alphabet = "abcdefghiklmnopqrstuvwxyz".toUpperCase();
 
-    public char[][] matrix = new char[5][5];
+    private char[][] matrix = new char[5][5];
 
-    public char[][] getMatrix(){
+    private char[][] getMatrix(){
         for (int k = 0, i = 0, j = 0; k < key.length(); k++){
             if(i > 4){
                 j++;
@@ -59,12 +59,12 @@ public class Cryptograph {
         return matrix;
     }
 
-    public String[] toBigram(){
+    private String[] toBigram(){
         int size = Math.round(mainString.length()/2.0f);
 
         String[] arrayChars = new String[size];
         if(mainString.length()/2.0 % 1 == 0.5){
-            mainString = mainString + ' ';
+            mainString = mainString + 'X';
         }
 
         for (int i = 0, j = 0; i < mainString.length(); i+=2, j++){
@@ -74,7 +74,7 @@ public class Cryptograph {
         return arrayChars;
     }
 
-    public int[] getCoordsOfChar(char ch){
+    private int[] getCoordsOfChar(char ch){
         int[] output = new int[2];
         char[][] matrix = this.getMatrix();
 
@@ -89,7 +89,7 @@ public class Cryptograph {
         return output;
     }
 
-    public String encryptBigram(String input){
+    private String encryptBigram(String input){
         int[] firstCoord = this.getCoordsOfChar(input.charAt(0));
         int[] secondCoord = this.getCoordsOfChar(input.charAt(1));
 
@@ -137,5 +137,16 @@ public class Cryptograph {
         } else {
             return String.valueOf(matrix[firstCoord[0]][secondCoord[1]]) + matrix[secondCoord[0]][firstCoord[1]];
         }
+    }
+
+    public String encryptWord(){
+        String[] chars = this.toBigram();
+
+        String output = "";
+        for(String item: chars){
+            output += this.encryptBigram(item);
+        }
+
+        return output;
     }
 }
