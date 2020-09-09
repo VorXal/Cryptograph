@@ -3,8 +3,6 @@ package com.company;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class WindowFrame extends JFrame {
     public WindowFrame(){
@@ -13,11 +11,11 @@ public class WindowFrame extends JFrame {
         setBounds(300, 300, 300, 300);
         setLayout(new BorderLayout());
 
-        JTextField inputText = new JTextField(30);
-        Box inputBox = Box.createHorizontalBox();
-        inputBox.add(new JLabel("Input:"));
-        inputBox.add(inputText);
-        inputBox.add(Box.createHorizontalStrut(10));
+        JTextField inputEncryptText = new JTextField(30);
+        Box inputEncryptBox = Box.createHorizontalBox();
+        inputEncryptBox.add(new JLabel("Input Encrypt:"));
+        inputEncryptBox.add(inputEncryptText);
+        inputEncryptBox.add(Box.createHorizontalStrut(10));
 
 
         JButton encryptBtn = new JButton("Encrypt");
@@ -28,33 +26,42 @@ public class WindowFrame extends JFrame {
         keyBox.add(encryptBtn);
 
 
-        Box outputBox = Box.createHorizontalBox();
+        Box outputEncryptBox = Box.createHorizontalBox();
         JTextField outputText = new JTextField(60);
-        outputBox.add(new JLabel("Output:"));
-        outputBox.add(outputText);
-        outputBox.add(Box.createHorizontalStrut(10));
+        outputEncryptBox.add(new JLabel("Output:"));
+        outputEncryptBox.add(outputText);
+        outputEncryptBox.add(Box.createHorizontalStrut(10));
 
 
-        encryptBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Cryptograph temp = new Cryptograph(inputText.getText(), keyText.getText());
-                outputText.setText(temp.encryptWord());
-            }
+        JTextField inputDecryptText = new JTextField(30);
+        Box inputDecryptBox = Box.createHorizontalBox();
+        JButton decryptBtn = new JButton("Decrypt");
+        inputDecryptBox.add(new JLabel("Input Decrypt:"));
+        inputDecryptBox.add(inputDecryptText);
+        inputDecryptBox.add(Box.createHorizontalStrut(10));
+        inputDecryptBox.add(decryptBtn);
+
+
+        encryptBtn.addActionListener(e -> {
+            Cryptograph temp = new Cryptograph(inputEncryptText.getText(), keyText.getText());
+            outputText.setText(temp.encryptWord());
         });
 
-        add(inputBox);
-        add(Box.createVerticalStrut(12));
-        add(outputBox);
-        pack();
+        decryptBtn.addActionListener(e -> {
+            Cryptograph temp = new Cryptograph(inputDecryptText.getText(), keyText.getText());
+            outputText.setText(temp.decryptWord());
+        });
+
 
         Box mainBox = Box.createVerticalBox();
         mainBox.setBorder(new EmptyBorder(12,12,12,12));
-        mainBox.add(inputBox);
+        mainBox.add(inputEncryptBox);
         mainBox.add(Box.createVerticalStrut(12));
         mainBox.add(keyBox);
         mainBox.add(Box.createVerticalStrut(12));
-        mainBox.add(outputBox);
+        mainBox.add(outputEncryptBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(inputDecryptBox);
         setContentPane(mainBox);
         pack();
         setResizable(false);

@@ -6,6 +6,8 @@ import java.util.Set;
 public class Cryptograph {
     private String mainString;
     private String key;
+
+
     public Cryptograph(String input, String key){
         StringBuilder temp = new StringBuilder(input.replaceAll("\\W", "").toUpperCase());
         for (int i = 0, j = 1; j < temp.length();){
@@ -35,8 +37,6 @@ public class Cryptograph {
 
         this.key = sb.toString().toUpperCase();
     }
-
-    public String getMainString(){return this.mainString;}
 
     private String alphabet = "abcdefghiklmnopqrstuvwxyz".toUpperCase();
 
@@ -160,6 +160,73 @@ public class Cryptograph {
         StringBuilder output = new StringBuilder();
         for(String item: chars){
             output.append(this.encryptBigram(item));
+        }
+
+        return output.toString();
+    }
+
+    public String decryptBigram(String input){
+        int[] firstCoord = this.getCoordsOfChar(input.charAt(0));
+        int[] secondCoord = this.getCoordsOfChar(input.charAt(1));
+
+        if (firstCoord[0] == secondCoord[0] && firstCoord[1] == secondCoord[1]){
+            if(input.charAt(0) == 'X' && input.charAt(1) == 'X'){
+                if(firstCoord[1] == 4){
+                    return String.valueOf(matrix[firstCoord[0]][0]) + matrix[firstCoord[0]][0];
+                }
+                else{
+                    return (String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[firstCoord[0]][firstCoord[1] + 1]) +
+                            (String.valueOf(matrix[firstCoord[0]][firstCoord[1] + 1]) + matrix[firstCoord[0]][firstCoord[1] + 1]);
+                }
+            }
+            return (encryptBigram(input.charAt(0) + "X") + encryptBigram(input.charAt(0) + "X"));
+        }else if (firstCoord[0] == secondCoord[0]){ //SAME ROW
+            if(secondCoord[1] < firstCoord[1]){
+                if(secondCoord[1] == 0){
+                    return String.valueOf(matrix[firstCoord[0]][firstCoord[1] - 1]) + matrix[secondCoord[0]][4];
+                } else {
+                    return String.valueOf(matrix[firstCoord[0]][firstCoord[1] - 1]) + matrix[secondCoord[0]][secondCoord[1] - 1];
+                }
+            } else{
+                if(firstCoord[1] == 0){
+                    return String.valueOf(matrix[firstCoord[0]][4]) + matrix[secondCoord[0]][secondCoord[1] - 1];
+                }
+                else {
+                    return String.valueOf(matrix[firstCoord[0]][firstCoord[1] - 1]) + matrix[secondCoord[0]][secondCoord[1] - 1];
+                }
+            }
+        } else if(firstCoord[1] == secondCoord[1]){
+            if(secondCoord[0] < firstCoord[0]){
+                if(secondCoord[0] == 0){
+                    return String.valueOf(matrix[firstCoord[0] - 1][firstCoord[1]]) + matrix[4][secondCoord[1]];
+                } else {
+                    return String.valueOf(matrix[firstCoord[0] - 1][firstCoord[1]]) + matrix[secondCoord[0] - 1][secondCoord[1]];
+                }
+            } else{
+                if(firstCoord[0] == 0){
+                    return String.valueOf(matrix[4][firstCoord[1]]) + matrix[secondCoord[0] - 1][secondCoord[1]];
+                }
+                else {
+                    return String.valueOf(matrix[firstCoord[0] - 1][firstCoord[1]]) + matrix[secondCoord[0] - 1][secondCoord[1]];
+                }
+            }
+        } else {
+            return String.valueOf(matrix[firstCoord[0]][secondCoord[1]]) + matrix[secondCoord[0]][firstCoord[1]];
+        }
+    }
+
+    public String decryptWord(){
+        String[] chars = this.toBigram();
+        StringBuilder output = new StringBuilder();
+
+        for(String item: chars){
+            output.append(this.decryptBigram(item));
+        }
+
+        for (int j = 1; j < output.length() - 1;j++){
+            if(output.charAt(j) == 'X' && output.charAt(j - 1) == output.charAt(j + 1)){
+                output.deleteCharAt(j);
+            }
         }
 
         return output.toString();
