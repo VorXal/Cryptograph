@@ -7,7 +7,20 @@ public class Cryptograph {
     private String mainString;
     private String key;
     public Cryptograph(String input, String key){
-        this.mainString = input;
+        StringBuilder temp = new StringBuilder(input.replaceAll("\\W", "").toUpperCase());
+        for (int i = 0, j = 1; j < temp.length();){
+            if (temp.charAt(i) == temp.charAt(j)){
+                temp.insert(j, 'X');
+                i = 0;
+                j = 1;
+            }
+            else{
+                i += 2;
+                j += 2;
+            }
+
+        }
+        this.mainString = temp.toString();
 
         char[] chars = key.toCharArray();
         Set<Character> charSet = new LinkedHashSet<Character>();
@@ -22,6 +35,8 @@ public class Cryptograph {
 
         this.key = sb.toString().toUpperCase();
     }
+
+    public String getMainString(){return this.mainString;}
 
     private String alphabet = "abcdefghiklmnopqrstuvwxyz".toUpperCase();
 
@@ -142,11 +157,11 @@ public class Cryptograph {
     public String encryptWord(){
         String[] chars = this.toBigram();
 
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for(String item: chars){
-            output += this.encryptBigram(item);
+            output.append(this.encryptBigram(item));
         }
 
-        return output;
+        return output.toString();
     }
 }
