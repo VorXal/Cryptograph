@@ -41,8 +41,50 @@ public class WindowFrame extends JFrame {
         inputDecryptBox.add(Box.createHorizontalStrut(10));
         inputDecryptBox.add(decryptBtn);
 
+        Box firstPublicKeyBox = Box.createHorizontalBox();
+        JTextField firstPublicKeyText = new JTextField(60);
+        firstPublicKeyBox.add(new JLabel("First Public Key:"));
+        firstPublicKeyBox.add(firstPublicKeyText);
+        firstPublicKeyBox.add(Box.createHorizontalStrut(10));
+
+        Box secondPublicKeyBox = Box.createHorizontalBox();
+        JTextField secondPublicKeyText = new JTextField(60);
+        secondPublicKeyBox.add(new JLabel("Second Public Key:"));
+        secondPublicKeyBox.add(secondPublicKeyText);
+        secondPublicKeyBox.add(Box.createHorizontalStrut(10));
+
+        Box firstPrivateKeyBox = Box.createHorizontalBox();
+        JTextField firstPrivateKeyText = new JTextField(60);
+        firstPrivateKeyBox.add(new JLabel("My Private Key:"));
+        firstPrivateKeyBox.add(firstPrivateKeyText);
+        firstPrivateKeyBox.add(Box.createHorizontalStrut(10));
+
+        Box firstPartialKeyBox = Box.createHorizontalBox();
+        JTextField firstPartialKeyText = new JTextField(60);
+        firstPartialKeyBox.add(new JLabel("My Partial Key:"));
+        JButton generatePartialKeyBtn = new JButton("Generate Partial Key");
+        firstPartialKeyBox.add(firstPartialKeyText);
+        firstPartialKeyBox.add(Box.createHorizontalStrut(10));
+        firstPartialKeyBox.add(generatePartialKeyBtn);
+
+        Box secondPartialKeyBox = Box.createHorizontalBox();
+        JTextField secondPartialKeyText = new JTextField(60);
+        secondPartialKeyBox.add(new JLabel("Second Partial Key:"));
+        secondPartialKeyBox.add(secondPartialKeyText);
+        secondPartialKeyBox.add(Box.createHorizontalStrut(10));
+
+        JCheckBox checkBox = new JCheckBox("Other");
+
 
         encryptBtn.addActionListener(e -> {
+            keyText.setText(Protocol.generateFinalKey(
+                    Protocol.generateFinalNumericKey(
+                            secondPartialKeyText.getText(),
+                            firstPrivateKeyText.getText(),
+                            firstPublicKeyText.getText(),
+                            checkBox.isSelected()
+                    )
+            ));
             Cryptograph temp = new Cryptograph(inputEncryptText.getText(), keyText.getText());
             outputText.setText(temp.encryptWord());
         });
@@ -50,6 +92,15 @@ public class WindowFrame extends JFrame {
         decryptBtn.addActionListener(e -> {
             Cryptograph temp = new Cryptograph(inputDecryptText.getText(), keyText.getText());
             outputText.setText(temp.decryptWord());
+        });
+
+        generatePartialKeyBtn.addActionListener(e -> {
+            firstPartialKeyText.setText(Protocol.generatePartialKey(
+                    firstPublicKeyText.getText(),
+                    secondPublicKeyText.getText(),
+                    Integer.parseInt(firstPrivateKeyText.getText()),
+                    checkBox.isSelected()
+                ));
         });
 
 
@@ -62,6 +113,21 @@ public class WindowFrame extends JFrame {
         mainBox.add(outputEncryptBox);
         mainBox.add(Box.createVerticalStrut(12));
         mainBox.add(inputDecryptBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(firstPublicKeyBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(firstPublicKeyBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(secondPublicKeyBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(firstPrivateKeyBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(firstPartialKeyBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(secondPartialKeyBox);
+        mainBox.add(Box.createVerticalStrut(12));
+        mainBox.add(checkBox);
+
         setContentPane(mainBox);
         pack();
         setResizable(false);
